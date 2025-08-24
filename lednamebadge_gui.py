@@ -144,7 +144,7 @@ class MainWindow(QMainWindow):
             ants.append(v["ants"])
 
         lengths = [b[1] for b in msg_bitmaps]
-        brightness = int(self.brightness_box.currentText().rstrip('%'))
+        brightness = self.brightness_box.currentData()
         header = LedNameBadge.header(lengths, speeds, modes, blinks, ants, brightness)
 
         buf = array('B')
