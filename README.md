@@ -30,7 +30,7 @@ This one uses a USB-HID interface, while others use USB-Serial (see references b
 
 ## GUI Configuration
 
-Install PySide6 and run `python lednamebadge_gui.py` to start a simple GUI that lets you configure all eight memory slots individually.
+Install PySide6 and run `python lednamebadge_gui.py` to start a simple GUI that lets you configure all eight memory slots individually. Modes are chosen from a drop-down with descriptive names and the available `:icon:` codes are shown in a read-only field.
 
 ## Command Line Installation and Usage
 

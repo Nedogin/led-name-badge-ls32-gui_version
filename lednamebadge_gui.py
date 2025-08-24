@@ -27,10 +27,18 @@ class SlotWidget(QGroupBox):
         layout.addWidget(QLabel("Speed"), 1, 0)
         layout.addWidget(self.speed_spin, 1, 1)
 
-        self.mode_spin = QSpinBox()
-        self.mode_spin.setRange(0, 8)
+        self.mode_box = QComboBox()
+        self.mode_box.addItem("Scroll left", 0)
+        self.mode_box.addItem("Scroll right", 1)
+        self.mode_box.addItem("Scroll up", 2)
+        self.mode_box.addItem("Scroll down", 3)
+        self.mode_box.addItem("Still", 4)
+        self.mode_box.addItem("Animation", 5)
+        self.mode_box.addItem("Drop down", 6)
+        self.mode_box.addItem("Curtain", 7)
+        self.mode_box.addItem("Laser", 8)
         layout.addWidget(QLabel("Mode"), 1, 2)
-        layout.addWidget(self.mode_spin, 1, 3)
+        layout.addWidget(self.mode_box, 1, 3)
 
         self.blink_box = QCheckBox("Blink")
         layout.addWidget(self.blink_box, 2, 0)
@@ -41,7 +49,7 @@ class SlotWidget(QGroupBox):
         return {
             "text": self.text_edit.text(),
             "speed": self.speed_spin.value(),
-            "mode": self.mode_spin.value(),
+            "mode": self.mode_box.currentData(),
             "blink": 1 if self.blink_box.isChecked() else 0,
             "ants": 1 if self.ants_box.isChecked() else 0,
         }
@@ -60,6 +68,12 @@ class MainWindow(QMainWindow):
         for slot in self.slots:
             layout.addWidget(slot)
 
+        icons = ", ".join(f":{n}:" for n in SimpleTextAndIcons._get_named_bitmaps_keys())
+        self.icons_desc = QTextEdit()
+        self.icons_desc.setReadOnly(True)
+        self.icons_desc.setPlainText("Icons (use :name:):\n" + icons)
+        layout.addWidget(self.icons_desc)
+        
         self.write_button = QPushButton("Write to Badge")
         self.write_button.clicked.connect(self.write_to_badge)
         layout.addWidget(self.write_button)
