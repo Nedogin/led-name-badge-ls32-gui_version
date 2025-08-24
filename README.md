@@ -28,6 +28,10 @@ In both configurations, the badge identifies itself on the USB as
 There are many different versions of LED Badges on the market.
 This one uses a USB-HID interface, while others use USB-Serial (see references below).
 
+## GUI Configuration
+
+Install PySide6 and run `python lednamebadge_gui.py` to start a simple GUI that lets you configure all eight memory slots individually.
+
 ## Command Line Installation and Usage
 
 ### User access to badge on all Linuxes
