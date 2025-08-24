@@ -3,7 +3,8 @@ from array import array
 
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
                                QGroupBox, QGridLayout, QLabel, QLineEdit,
-                               QSpinBox, QCheckBox, QPushButton)
+                               QSpinBox, QComboBox, QCheckBox, QPushButton,
+                               QTextEdit)
 
 from lednamebadge import SimpleTextAndIcons, LedNameBadge
 
@@ -73,7 +74,7 @@ class MainWindow(QMainWindow):
         self.icons_desc.setReadOnly(True)
         self.icons_desc.setPlainText("Icons (use :name:):\n" + icons)
         layout.addWidget(self.icons_desc)
-        
+
         self.write_button = QPushButton("Write to Badge")
         self.write_button.clicked.connect(self.write_to_badge)
         layout.addWidget(self.write_button)
