@@ -1,10 +1,21 @@
 import sys
 from array import array
 
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
-                               QGroupBox, QGridLayout, QLabel, QLineEdit,
-                               QSpinBox, QComboBox, QCheckBox, QPushButton,
-                               QTextEdit)
+from PySide6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QVBoxLayout,
+    QGroupBox,
+    QGridLayout,
+    QLabel,
+    QLineEdit,
+    QSpinBox,
+    QComboBox,
+    QCheckBox,
+    QPushButton,
+    QTextEdit,
+)
 
 from lednamebadge import SimpleTextAndIcons, LedNameBadge
 
@@ -19,8 +30,15 @@ class SlotWidget(QGroupBox):
         layout = QGridLayout(self)
 
         self.text_edit = QLineEdit()
+        self.text_edit.setMaxLength(750)
+        self.text_edit.setMinimumWidth(300)
         layout.addWidget(QLabel("Text:"), 0, 0)
         layout.addWidget(self.text_edit, 0, 1, 1, 3)
+
+        self.char_count_label = QLabel("0/750")
+        layout.addWidget(self.char_count_label, 0, 4)
+        self.text_edit.textChanged.connect(self._update_char_count)
+        self._update_char_count()
 
         self.speed_spin = QSpinBox()
         self.speed_spin.setRange(1, 8)
@@ -55,6 +73,10 @@ class SlotWidget(QGroupBox):
             "ants": 1 if self.ants_box.isChecked() else 0,
         }
 
+    def _update_char_count(self) -> None:
+        length = len(self.text_edit.text())
+        self.char_count_label.setText(f"{length}/750")
+
 
 class MainWindow(QMainWindow):
     def __init__(self) -> None:
@@ -68,6 +90,20 @@ class MainWindow(QMainWindow):
         self.slots = [SlotWidget(i) for i in range(8)]
         for slot in self.slots:
             layout.addWidget(slot)
+
+        brightness_layout = QGridLayout()
+        brightness_widget = QWidget()
+        brightness_widget.setLayout(brightness_layout)
+
+        brightness_layout.addWidget(QLabel("Brightness"), 0, 0)
+        self.brightness_box = QComboBox()
+        self.brightness_box.addItem("25%", 25)
+        self.brightness_box.addItem("50%", 50)
+        self.brightness_box.addItem("75%", 75)
+        self.brightness_box.addItem("100%", 100)
+        self.brightness_box.setCurrentText("100%")
+        brightness_layout.addWidget(self.brightness_box, 0, 1)
+        layout.addWidget(brightness_widget)
 
         icons = ", ".join(f":{n}:" for n in SimpleTextAndIcons._get_named_bitmaps_keys())
         self.icons_desc = QTextEdit()
@@ -98,7 +134,8 @@ class MainWindow(QMainWindow):
             ants.append(v["ants"])
 
         lengths = [b[1] for b in msg_bitmaps]
-        header = LedNameBadge.header(lengths, speeds, modes, blinks, ants)
+        brightness = self.brightness_box.currentData()
+        header = LedNameBadge.header(lengths, speeds, modes, blinks, ants, brightness)
 
         buf = array('B')
         buf.extend(header)
